@@ -1,14 +1,18 @@
-import pandas as pd
+import csv
 import requests
 
-# Reading data from the csv
-df = pd.read_csv('Task 2 - intern.csv')
-
-
-for url in df['URL']:
+def get_status_code(url):
     try:
         response = requests.get(url)
-        response.raise_for_status()
-        print(f"({response.status_code}) {url}")
-    except requests.exceptions.RequestException as e:
-        print(f"Error accessing {url}: {e}")
+        return response.status_code
+    except requests.exceptions.RequestException:
+        return "Error"
+        
+filename = "Task 2 - intern.csv"  
+with open(filename, "r") as file:
+    reader = csv.reader(file)
+    urls = [row[0] for row in reader]
+
+for url in urls:
+    status_code = get_status_code(url)
+    print(f"({status_code}) {url}")
